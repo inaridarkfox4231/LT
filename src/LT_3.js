@@ -18,15 +18,30 @@ function getctx(){
 function drawAllDots(){
   ctx = getctx();
   for(i = -5; i <= 5; i++){
-    ctx.drawImage(colors[0], 249, 249 + i * 10);
-    ctx.drawImage(colors[0], 249 + i * 10, 249);
+    ctx.drawImage(colors[0], 248, 248 + i * 10);
+    ctx.drawImage(colors[0], 248 + i * 10, 248);
   }
   for(i = 1; i <= 5; i++){
     for(j = 1; j <= 5; j++){
-      ctx.drawImage(colors[1], 249 + i * 10, 249 + j * 10);
-      ctx.drawImage(colors[2], 249 - i * 10, 249 + j * 10);
-      ctx.drawImage(colors[3], 249 + i * 10, 249 - j * 10);
-      ctx.drawImage(colors[4], 249 - i * 10, 249 - j * 10);
+      ctx.drawImage(colors[1], 248 + i * 10, 248 + j * 10);
+      ctx.drawImage(colors[2], 248 - i * 10, 248 + j * 10);
+      ctx.drawImage(colors[3], 248 + i * 10, 248 - j * 10);
+      ctx.drawImage(colors[4], 248 - i * 10, 248 - j * 10);
+    }
+  }
+}
+function drawTransformedDots(a, b, c, d){
+  ctx = getctx();
+  for(i = -5; i <= 5; i++){
+    ctx.drawImage(colors[0], 248 + i * a * 10, 248 + i * c * 10);
+    ctx.drawImage(colors[0], 248 + i * b * 10, 248 + i * d * 10);
+  }
+  for(i = 1; i <= 5; i++){
+    for(j = 1; j <= 5; j++){
+      ctx.drawImage(colors[1], 248 + (i * a + j * b) * 10, 248 + (i * c + j * d) * 10);
+      ctx.drawImage(colors[2], 248 + (-i * a + j * b) * 10, 248 + (-i * c + j * d) * 10);
+      ctx.drawImage(colors[3], 248 + (i * a - j * b) * 10, 248 + (i * c - j * d) *10);
+      ctx.drawImage(colors[4], 248 + (-i * a - j * b) * 10, 248 + (-i * c - j * d) * 10);
     }
   }
 }
@@ -38,5 +53,6 @@ function init(){
   ctx.arrow(0, 250, 500, 250, [0, 1, -10, 1, -10, 5]);
   ctx.fillStyle = "#ccc";
   ctx.fill();
-  drawAllDots();
+  //drawAllDots();
+  drawTransformedDots(1, -3, 2, -1);
 }
