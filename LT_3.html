@@ -1,0 +1,21 @@
+<!-- canvasで線型変換の実験をしてみる -->
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>線型変換の実験</title>
+    <style>
+    * {padding: 0; margin: 0}
+    canvas { background: #eee; display: block; margin: 0 auto;}
+    </style>
+    <!-- 矢印 -->
+    <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
+  </head>
+  <!-- onloadでこうしないとdrawImageによる描画が出来ないんだよー -->
+  <body onload = "init()">
+    <canvas id = "myCanvas" width = "500" height = "500"></canvas>
+    <script src = "./src/LT_3.js">
+
+    </script>
+  </body>
+</html>

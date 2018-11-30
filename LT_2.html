@@ -1,0 +1,28 @@
+<!-- canvasで線型変換の実験をしてみる -->
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>線型変換の実験</title>
+    <style>
+    * {padding: 0; margin: 0}
+    canvas { background: #eee; display: block; margin: 0 auto;}
+    </style>
+  </head>
+  <!-- 点を打つ練習・・とはいえこれだと実用的じゃない。もっと考えないと。 -->
+  <!-- オセロとかインターバル問題集どうやって作ってたのか思い出さないとな・・ -->
+  <body onload = "draw()">
+    <canvas id = "myCanvas" width = "500" height = "500"></canvas>
+    <script type = "text/javascript">
+      function draw(){
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var black = new Image();
+        black.src = "./images/black.png";
+        black.onload = function onImageLoad(){
+          ctx.drawImage(black, 0, 0);
+        }
+      }
+    </script>
+  </body>
+</html>
