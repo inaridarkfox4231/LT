@@ -5,9 +5,14 @@
     <meta charset="utf-8">
     <title>線型変換の実験</title>
     <style>
-      .heading{ text-align: center; }
+      .heading{ text-align: center; font-size: 20px; margin: 0; }
       .field { text-align: center; }
-      canvas{ background-color: #eee; display: inline-block; }
+      canvas{ background-color: #eee; }
+      .figs{ display: inline-block; margin: 5px; }
+      #matrix{ font-size: 30px; }
+      .inputElem{ text-align: center; }
+      .inputs{ display: inline-block; }
+      .element{ height: 30px; width: 40px; font-size: 20px; }
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
@@ -24,16 +29,27 @@
         \end{array} \right)
       }
     \)
+    <!-- 図式を使うための宣言（矢印借りるだけ） -->
+    \( \require{AMScd} \)
     <div class = "heading">
-      <b>線型変換</b>
+      <b>線型変換ビジュアライザー</b>
     </div>
     <div class = "field">
       <!-- 400×400の方がサイズ的にいいかな・・・・ -->
-      <canvas id = "myCanvas" width = "500" height = "500"></canvas>
-      <canvas id = "secondCanvas" width = "500" height = "500"></canvas>
+      <canvas id = "before" class = "figs" width = "400" height = "400"></canvas>
+      <div id = "matrix" class = "figs">
+          \begin{CD} @>\fourmat{0}{1}{1}{0}>> \end{CD}
+      </div>
+      <canvas id = "after" class = "figs" width = "400" height = "400"></canvas>
     </div>
-    <div id = "matrix" align = "center">
-      <!-- ここに行列を表示 -->
+    <div class = "inputElem">
+      <div id = "inputArea" class = "inputs">
+        <input class = "element" id = "elem00" type = "text" maxlength = "3">
+        <input class = "element" id = "elem01" type = "text" maxlength = "3"><br>
+        <input class = "element" id = "elem10" type = "text" maxlength = "3">
+        <input class = "element" id = "elem11" type = "text" maxlength = "3">
+      </div>
+      <div class = "inputs">エンターキーで変換結果の確認、スペースキーで表示方法変更</div>
     </div>
     <script src = "./src/LT_4.js">
     </script>
