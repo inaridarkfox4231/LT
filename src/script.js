@@ -66,10 +66,8 @@ function drawDots(elem, pos){
       ctx.drawImage(colors[4], 197 + (-i * a - j * b) * 10, 197 - (-i * c - j * d) * 10);
     }
   }
-  // 最後に、posが1の場合に矢印の上に行列を出す。
-  if(pos == 1){
-    document.getElementById("matrix").innerText = "行列";
-  }
+  // 最後に、posが1の場合に矢印の上に行列を出す（出ない・・なぜだ・・）
+  // どうやら無理みたいです。最初に読み込まないと適用されないようで・・
 }
 
 // 初期化ですべきこと：beforeにデフォルトのドットを表示する。
