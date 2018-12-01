@@ -5,8 +5,9 @@
     <meta charset="utf-8">
     <title>線型変換の実験</title>
     <style>
-    * {padding: 0; margin: 0}
-    canvas { background: #eee; display: block; margin: 0 auto;}
+      .heading{ text-align: center; }
+      .field { text-align: center; }
+      canvas{ background-color: #eee; display: inline-block; }
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
@@ -23,10 +24,18 @@
         \end{array} \right)
       }
     \)
-    <canvas id = "myCanvas" width = "500" height = "500"></canvas>
-    <script src = "./src/script.js">
+    <div class = "heading">
+      <b>線型変換</b>
+    </div>
+    <div class = "field">
+      <!-- 400×400の方がサイズ的にいいかな・・・・ -->
+      <canvas id = "myCanvas" width = "500" height = "500"></canvas>
+      <canvas id = "secondCanvas" width = "500" height = "500"></canvas>
+    </div>
+    <div id = "matrix" align = "center">
+      <!-- ここに行列を表示 -->
+    </div>
+    <script src = "./src/LT_4.js">
     </script>
-    <!-- ここに行列を表示 -->
-    <div id = "matrix"></div>
   </body>
 </html>
