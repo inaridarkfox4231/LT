@@ -10,12 +10,23 @@
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
   </head>
   <!-- onloadでこうしないとdrawImageによる描画が出来ないんだよー -->
   <body onload = "init()">
+    <!-- 2次正方行列を生成するマクロを記述 -->
+    \(
+      \newcommand{\fourmat}[4]{
+        \left( \begin{array}{cc}
+          {#1} & {#2} \\
+          {#3} & {#4}
+        \end{array} \right)
+      }
+    \)
     <canvas id = "myCanvas" width = "500" height = "500"></canvas>
     <script src = "./src/LT_3.js">
-
     </script>
+    <!-- ここに行列を表示 -->
+    <div id = "matrix"></div>
   </body>
 </html>

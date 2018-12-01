@@ -15,33 +15,28 @@ function getctx(){
   return ctx;
 }
 
-function drawAllDots(){
-  ctx = getctx();
-  for(i = -5; i <= 5; i++){
-    ctx.drawImage(colors[0], 248, 248 + i * 10);
-    ctx.drawImage(colors[0], 248 + i * 10, 248);
+// {1}{2}{3}{4}を生成するだけの関数
+function makeParams(elem, size){
+  var str = "";
+  for(i = 0; i < size; i++){
+    str += "{" + elem[i].toString() + "}"
   }
-  for(i = 1; i <= 5; i++){
-    for(j = 1; j <= 5; j++){
-      ctx.drawImage(colors[1], 248 + i * 10, 248 + j * 10);
-      ctx.drawImage(colors[2], 248 - i * 10, 248 + j * 10);
-      ctx.drawImage(colors[3], 248 + i * 10, 248 - j * 10);
-      ctx.drawImage(colors[4], 248 - i * 10, 248 - j * 10);
-    }
-  }
+  return str;
 }
-function drawTransformedDots(a, b, c, d){
+
+function drawDots(elem){
   ctx = getctx();
+  var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
   for(i = -5; i <= 5; i++){
-    ctx.drawImage(colors[0], 247 + i * a * 10, 247 + i * c * 10);
-    ctx.drawImage(colors[0], 247 + i * b * 10, 247 + i * d * 10);
+    ctx.drawImage(colors[0], 247 + i * a * 10, 247 - i * c * 10);
+    ctx.drawImage(colors[0], 247 + i * b * 10, 247 - i * d * 10);
   }
   for(i = 1; i <= 5; i++){
     for(j = 1; j <= 5; j++){
-      ctx.drawImage(colors[1], 247 + (i * a + j * b) * 10, 247 + (i * c + j * d) * 10);
-      ctx.drawImage(colors[2], 247 + (-i * a + j * b) * 10, 247 + (-i * c + j * d) * 10);
-      ctx.drawImage(colors[3], 247 + (i * a - j * b) * 10, 247 + (i * c - j * d) *10);
-      ctx.drawImage(colors[4], 247 + (-i * a - j * b) * 10, 247 + (-i * c - j * d) * 10);
+      ctx.drawImage(colors[1], 247 + (i * a + j * b) * 10, 247 - (i * c + j * d) * 10);
+      ctx.drawImage(colors[2], 247 + (-i * a + j * b) * 10, 247 - (-i * c + j * d) * 10);
+      ctx.drawImage(colors[3], 247 + (i * a - j * b) * 10, 247 - (i * c - j * d) *10);
+      ctx.drawImage(colors[4], 247 + (-i * a - j * b) * 10, 247 - (-i * c - j * d) * 10);
     }
   }
 }
@@ -54,5 +49,8 @@ function init(){
   ctx.fillStyle = "#ccc";
   ctx.fill();
   //drawAllDots();
-  drawTransformedDots(2, 1, 1, 3);
+  var elem = [-1, 2, 2, 1];
+  drawDots(elem);
+  document.getElementById("matrix").innerText = "\\[ \\fourmat" + makeParams(elem, 4) + " \\]";
+
 }
