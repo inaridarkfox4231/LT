@@ -8,11 +8,19 @@ for(i = 0; i < 5; i++){
   colors.push(color);
 }
 
+// キーコード
+const K_ENTER = 13;
+const K_SHIFT = 16;
+const K_RIGHT = 39;
+const K_LEFT = 37;
+const K_UP = 38;
+const K_DOWN = 40;
+
 // まっさらの画像
 var blank = new Image();
 blank.src = "./images/blank.png";
 
-// モード変数（0:Dots, 1:Lattice, 2:arrows）
+// モード変数（0:Dots, 1:Lattice, 2:Arrows）
 var mode = 0;
 
 // 変換が行われる数字の列（エンターキーを押すと登録される）
@@ -46,6 +54,27 @@ function getValue(i, j){
   return document.getElementById(str_id).value;
 }
 
+// 座標軸を描く
+function drawAxis(ctx){
+  ctx.beginPath();
+  ctx.arrow(200, 400, 200, 0, [0, 1, -10, 1, -10, 5]);
+  ctx.arrow(0, 200, 400, 200, [0, 1, -10, 1, -10, 5]);
+  ctx.fillStyle = "#999";
+  ctx.fill();
+}
+
+// 軸ベクトルを描く
+function drawAxisVector(ctx, x1, y1, x2, y2){
+  ctx.beginPath();
+  ctx.arrow(200, 200, 200 + x1, 200 + y1, [0, 1, -10, 1, -10, 5]);
+  ctx.fillStyle = "red";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arrow(200, 200, 200 + x2, 200 + y2, [0, 1, -10, 1, -10, 5]);
+  ctx.fillStyle = "blue";
+  ctx.fill();
+}
+
 // 行列(a, b; c, d)で変換した結果を表示する（ドット表示）
 function drawDots(elem, pos){
   // posが0のときは左側、1のときは右側。
@@ -53,18 +82,14 @@ function drawDots(elem, pos){
   // ここで一度まっさらにする
   ctx.drawImage(blank, 0, 0);
   // ここで座標軸を表示する
-  ctx.beginPath();
-  ctx.arrow(200, 400, 200, 0, [0, 1, -10, 1, -10, 5]);
-  ctx.arrow(0, 200, 400, 200, [0, 1, -10, 1, -10, 5]);
-  ctx.fillStyle = "#999";
-  ctx.fill();
+  drawAxis(ctx);
   // 成分に基づいて点を描画する。まずは座標軸上の点（か、それを移した点）
   var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
   for(i = -5; i <= 5; i++){
     ctx.drawImage(colors[0], 197 + i * a * 10, 197 - i * c * 10);
     ctx.drawImage(colors[0], 197 + i * b * 10, 197 - i * d * 10);
   }
-  // 次いで、第1～第4象限の点（か、それを移した点）
+  // 次いで、第1～第4象限の点（か、それを移した点）（y座標を逆にするの注意）
   for(i = 1; i <= 5; i++){
     for(j = 1; j <= 5; j++){
       ctx.drawImage(colors[1], 197 + (i * a + j * b) * 10, 197 - (i * c + j * d) * 10);
@@ -80,17 +105,41 @@ function drawLattice(elem, pos){
   var ctx = getctx(pos);
   // 一度まっさらにする
   ctx.drawImage(blank, 0, 0);
+  // 変数を用意する
+  var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
   // 線を引く
   ctx.beginPath();
+  ctx.strokeStyle = "#bbb";
   for(i = 1; i < 40; i++){
-    ctx.moveTo(0, i * 10);
-    ctx.lineTo(400, i * 10);
+    ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
+    ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
     ctx.stroke();
-    ctx.moveTo(i * 10, 0);
-    ctx.lineTo(i * 10, 400);
+    ctx.moveTo(a * i * 10 + 200 * (1 - a - b), -c * i * 10 + 200 * (1 + c + d));
+    ctx.lineTo(a * i * 10 + 200 * (1 - a + b), -c * i * 10 + 200 * (1 + c - d));
     ctx.stroke();
   }
-  // 色についてはのちのち考える・・・
+  // 座標軸を描く
+  drawAxis(ctx);
+  // 軸ベクトルの描画。二つの矢印（x方向の赤とy方向の青）を表示。
+  drawAxisVector(ctx, 50 * a, -50 * c, 50 * b, -50 * d);
+}
+
+// 線型変換による移動の様子を描画する
+function drawArrows(elem, pos){
+  var ctx = getctx(pos);
+  ctx.drawImage(blank, 0, 0);
+  var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
+  var target = [0, 0];
+  ctx.beginPath();
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      target[0] = 20 * (a * i + b * j) + 200 * (1 - a - b);
+      target[1] = -20 * (c * i + d * j) + 200 * (1 - c + d);
+      ctx.arrow(20 * i, 20 * j, target[0], target[1], [0, 1, -10, 1, -10, 5]);
+    }
+  }
+  ctx.fillStyle = "#bbb";
+  ctx.fill();
 }
 
 // 初期化ですべきこと：beforeにデフォルトのドットを表示する。afterにも、一応。
@@ -112,7 +161,7 @@ function showResult(elem, pos){
 // スペースとエンターを押したときの処理
 document.addEventListener("keydown", function(e){
   // エンターキーを押したときに行われること：（行列と矢印の表示、）afterに結果の表示。
-  if(e.keyCode == "13"){
+  if(e.keyCode == K_ENTER){
     var a = getValue(0, 0), b = getValue(0, 1), c = getValue(1, 0), d = getValue(1, 1);
     a = Number(a), b = Number(b), c = Number(c), d = Number(d);
     if(isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)){
@@ -123,7 +172,7 @@ document.addEventListener("keydown", function(e){
     showResult(elem, 1);
   }
   // スペースキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
-  if(e.keyCode == "32"){
+  if(e.keyCode == K_SHIFT){
     mode = (mode + 1) % 2;
     showResult([1, 0, 0, 1], 0);
     showResult(elem, 1);
