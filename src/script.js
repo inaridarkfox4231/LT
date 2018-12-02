@@ -8,8 +8,15 @@ for(i = 0; i < 5; i++){
   colors.push(color);
 }
 
+// まっさらの画像
 var blank = new Image();
 blank.src = "./images/blank.png";
+
+// モード変数（0:Dots, 1:Lattice, 2:arrows）
+var mode = 0;
+
+// 変換が行われる数字の列（エンターキーを押すと登録される）
+var elem = [1, 0, 0, 1];
 
 // canvasのcontextの取得
 function getctx(pos){
@@ -66,22 +73,59 @@ function drawDots(elem, pos){
       ctx.drawImage(colors[4], 197 + (-i * a - j * b) * 10, 197 - (-i * c - j * d) * 10);
     }
   }
-  // 最後に、posが1の場合に矢印の上に行列を出す（出ない・・なぜだ・・）
-  // どうやら無理みたいです。最初に読み込まないと適用されないようで・・
 }
 
-// 初期化ですべきこと：beforeにデフォルトのドットを表示する。
+// 格子を表示する（格子線、ベクトルの両方）
+function drawLattice(elem, pos){
+  var ctx = getctx(pos);
+  // 一度まっさらにする
+  ctx.drawImage(blank, 0, 0);
+  // 線を引く
+  ctx.beginPath();
+  for(i = 1; i < 40; i++){
+    ctx.moveTo(0, i * 10);
+    ctx.lineTo(400, i * 10);
+    ctx.stroke();
+    ctx.moveTo(i * 10, 0);
+    ctx.lineTo(i * 10, 400);
+    ctx.stroke();
+  }
+  // 色についてはのちのち考える・・・
+}
+
+// 初期化ですべきこと：beforeにデフォルトのドットを表示する。afterにも、一応。
 function init(){
   drawDots([1, 0, 0, 1], 0);
+  drawDots([1, 0, 0, 1], 1);
 }
 
-// テキストボックス4つに数字を入れたい。
-// エンターキーを押したときに行われること：行列と矢印の表示、afterにドットの表示。
+// modeが0, 1, 2のいずれかに応じて変換結果を表示する関数
+function showResult(elem, pos){
+  if(mode == 0){
+    drawDots(elem, pos);
+  }else if(mode == 1){
+    drawLattice(elem, pos);
+  }
+  // 1と2はそのうち用意する
+}
+
+// スペースとエンターを押したときの処理
 document.addEventListener("keydown", function(e){
+  // エンターキーを押したときに行われること：（行列と矢印の表示、）afterに結果の表示。
   if(e.keyCode == "13"){
     var a = getValue(0, 0), b = getValue(0, 1), c = getValue(1, 0), d = getValue(1, 1);
     a = Number(a), b = Number(b), c = Number(c), d = Number(d);
-    if(isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)){ return; }
-    drawDots([a, b, c, d], 1);
+    if(isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)){
+       return;
+     }else{
+       elem[0] = a, elem[1] = b, elem[2] = c, elem[3] = d;
+     }
+    showResult(elem, 1);
+  }
+  // スペースキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
+  if(e.keyCode == "32"){
+    mode = (mode + 1) % 2;
+    showResult([1, 0, 0, 1], 0);
+    showResult(elem, 1);
   }
 })
