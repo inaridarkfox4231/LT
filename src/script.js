@@ -11,11 +11,6 @@ for(i = 0; i < 5; i++){
 // キーコード
 const K_ENTER = 13;
 const K_SHIFT = 16;
-const K_RIGHT = 39;
-const K_LEFT = 37;
-const K_UP = 38;
-const K_DOWN = 40;
-const K_ESCAPE = 27;
 
 // まっさらの画像
 var blank = new Image();
@@ -23,9 +18,6 @@ blank.src = "./images/blank.png";
 
 // モード変数（0:Dots, 1:Lattice, 2:Arrows）
 var mode = 0;
-
-// フォーカス変数（00, 01, 10, 11のうち編集中のマス）
-var focuspos = [0, 0];
 
 // 変換が行われる数字の列（エンターキーを押すと登録される）
 var elem = [1, 0, 0, 1];
@@ -77,11 +69,6 @@ function drawAxisVector(ctx, x1, y1, x2, y2){
   ctx.arrow(200, 200, 200 + x2, 200 + y2, [0, 1, -10, 1, -10, 5]);
   ctx.fillStyle = "blue";
   ctx.fill();
-}
-
-// フォーカスしているマスのidを取得する
-function getFocusId(){
-  return "elem" + focuspos[0].toString() + focuspos[1].toString();
 }
 
 // 行列(a, b; c, d)で変換した結果を表示する（ドット表示）
@@ -192,17 +179,5 @@ document.addEventListener("keydown", function(e){
     mode = (mode + 1) % 3;
     showResult([1, 0, 0, 1], 0);
     showResult(elem, 1);
-  }
-  // 上下左右キーを押したときの反応。フォーカスがチェンジする。
-  if(e.keyCode == K_UP || e.keyCode == K_DOWN){
-    focuspos[0] = 1 - focuspos[0];
-    document.getElementById(getFocusId()).focus();
-  }
-  if(e.keyCode == K_LEFT || e.keyCode == K_RIGHT){
-    focuspos[1] = 1 - focuspos[1];
-    document.getElementById(getFocusId()).focus();
-  }
-  if(e.keyCode == K_ESCAPE){
-    document.getElementById(getFocusId()).value = "";
   }
 })
