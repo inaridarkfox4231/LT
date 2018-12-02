@@ -15,6 +15,7 @@ const K_RIGHT = 39;
 const K_LEFT = 37;
 const K_UP = 38;
 const K_DOWN = 40;
+const K_ESCAPE = 27;
 
 // まっさらの画像
 var blank = new Image();
@@ -22,6 +23,9 @@ blank.src = "./images/blank.png";
 
 // モード変数（0:Dots, 1:Lattice, 2:Arrows）
 var mode = 0;
+
+// フォーカス変数（00, 01, 10, 11のうち編集中のマス）
+var focuspos = [0, 0];
 
 // 変換が行われる数字の列（エンターキーを押すと登録される）
 var elem = [1, 0, 0, 1];
@@ -59,7 +63,7 @@ function drawAxis(ctx){
   ctx.beginPath();
   ctx.arrow(200, 400, 200, 0, [0, 1, -10, 1, -10, 5]);
   ctx.arrow(0, 200, 400, 200, [0, 1, -10, 1, -10, 5]);
-  ctx.fillStyle = "#999";
+  ctx.fillStyle = "#000";
   ctx.fill();
 }
 
@@ -73,6 +77,11 @@ function drawAxisVector(ctx, x1, y1, x2, y2){
   ctx.arrow(200, 200, 200 + x2, 200 + y2, [0, 1, -10, 1, -10, 5]);
   ctx.fillStyle = "blue";
   ctx.fill();
+}
+
+// フォーカスしているマスのidを取得する
+function getFocusId(){
+  return "elem" + focuspos[0].toString() + focuspos[1].toString();
 }
 
 // 行列(a, b; c, d)で変換した結果を表示する（ドット表示）
@@ -129,23 +138,28 @@ function drawArrows(elem, pos){
   var ctx = getctx(pos);
   ctx.drawImage(blank, 0, 0);
   var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
+  // 変化の矢印を描く
   var target = [0, 0];
   ctx.beginPath();
   for(i = 0; i <= 20; i++){
     for(j = 0; j <= 20; j++){
-      target[0] = 20 * (a * i + b * j) + 200 * (1 - a - b);
-      target[1] = -20 * (c * i + d * j) + 200 * (1 - c + d);
+      target[0] = 20 * i * a - 20 * j * b + 200 * (1 - a + b);
+      target[1] = -20 * i * c + 20 * j * d + 200 * (1 + c - d);
       ctx.arrow(20 * i, 20 * j, target[0], target[1], [0, 1, -10, 1, -10, 5]);
     }
   }
   ctx.fillStyle = "#bbb";
   ctx.fill();
+  // 座標軸を描く
+  drawAxis(ctx);
 }
 
 // 初期化ですべきこと：beforeにデフォルトのドットを表示する。afterにも、一応。
+// それと、00のマスにフォーカスして直接編集可能にする。
 function init(){
   drawDots([1, 0, 0, 1], 0);
   drawDots([1, 0, 0, 1], 1);
+  document.getElementById("elem00").focus();
 }
 
 // modeが0, 1, 2のいずれかに応じて変換結果を表示する関数
@@ -154,6 +168,8 @@ function showResult(elem, pos){
     drawDots(elem, pos);
   }else if(mode == 1){
     drawLattice(elem, pos);
+  }else if(mode == 2){
+    drawArrows(elem, pos);
   }
   // 1と2はそのうち用意する
 }
@@ -173,8 +189,20 @@ document.addEventListener("keydown", function(e){
   }
   // スペースキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
   if(e.keyCode == K_SHIFT){
-    mode = (mode + 1) % 2;
+    mode = (mode + 1) % 3;
     showResult([1, 0, 0, 1], 0);
     showResult(elem, 1);
+  }
+  // 上下左右キーを押したときの反応。フォーカスがチェンジする。
+  if(e.keyCode == K_UP || e.keyCode == K_DOWN){
+    focuspos[0] = 1 - focuspos[0];
+    document.getElementById(getFocusId()).focus();
+  }
+  if(e.keyCode == K_LEFT || e.keyCode == K_RIGHT){
+    focuspos[1] = 1 - focuspos[1];
+    document.getElementById(getFocusId()).focus();
+  }
+  if(e.keyCode == K_ESCAPE){
+    document.getElementById(getFocusId()).value = "";
   }
 })
