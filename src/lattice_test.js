@@ -82,8 +82,8 @@ function drawLattice(elem, pos){
   ctx.strokeStyle = "#bbb";
   // ここをいじる
   // 第1段階：座標軸の像としての直線を2本引く
+  var n, m, t, s;
   var u = Math.max(Math.abs(a), Math.abs(c)), v = Math.max(Math.abs(b), Math.abs(d));
-  var t;
   if(u > 0){
     t = Math.ceil(200 / u);
     ctx.moveTo(200 - a * t, 200 + c * t);
@@ -96,9 +96,23 @@ function drawLattice(elem, pos){
     ctx.lineTo(200 + b * t, 200 - d * t);
     ctx.stroke();
   }
-
   // 第2段階：座標軸に平行な直線群を順に引く（まずx軸、次いでy軸）
-
+  if(a * d - b * c != 0){
+    n = Math.ceil((30 * Math.sqrt(a * a + c * c)) / (Math.abs(a * d - b * c)));
+    m = Math.ceil((30 * Math.sqrt(b * b + d * d)) / (Math.abs(a * d - b * c)));
+    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (Math.abs(a * d - b * c)));
+    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (Math.abs(a * d - b * c)));
+    for(i = -n; i <= n; i++){
+      ctx.moveTo(200 + a * t + 10 * i * b, 200 - c * t - 10 * i * d);
+      ctx.lineTo(200 - a * t + 10 * i * b, 200 + c * t - 10 * i * d);
+      ctx.stroke();
+    }
+    for(i = -m; i <= m; i++){
+      ctx.moveTo(200 + b * t + 10 * i * a, 200 - d * t - 10 * i * c);
+      ctx.lineTo(200 - b * t + 10 * i * a, 200 + d * t - 10 * i * c);
+      ctx.stroke();
+    }
+  }
   //for(i = 1; i < 40; i++){
   //  ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
   //  ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
