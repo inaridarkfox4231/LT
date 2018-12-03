@@ -78,6 +78,16 @@ function drawDots(elem, pos){
   drawAxis(ctx);
 }
 
+// 各点における移動方向の矢印を求める（できれば長さを色で表したいけど）
+function drawSingleArrow(ctx, x1, y1, x2, y2){
+  var dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+  var dx = (15 * (x2 - x1)) / dist, dy = (15 * (y2 - y1)) / dist;
+  ctx.beginPath();
+  ctx.arrow(x1, y1, x1 + dx, y1 + dy, [0, 1, -3, 1, -6, 5]);
+  ctx.fill();
+  // グラデーションテストをエクセルでおこなったので使うかどうか決める（後で）
+}
+
 // 線型変換による移動の様子を描画する
 function drawArrows(elem, pos){
   var ctx = getctx(pos);
@@ -86,15 +96,11 @@ function drawArrows(elem, pos){
   // 変化の矢印を描く
   var target = [0, 0];
   ctx.beginPath();
-  for(i = 0; i <= 20; i++){
-    for(j = 0; j <= 20; j++){
-      target[0] = 20 * i * a - 20 * j * b + 200 * (1 - a + b);
-      target[1] = -20 * i * c + 20 * j * d + 200 * (1 + c - d);
-      ctx.arrow(20 * i, 20 * j, target[0], target[1], [0, 1, -10, 1, -10, 5]);
+  for(i = -10; i <= 10; i++){
+    for(j = -10; j <= 10; j++){
+      drawSingleArrow(ctx, 200 + 20 * i, 200 - 20 * j, 200 + 20 * (a * i + b * j), 200 - 20 * (c * i + d * j));
     }
   }
-  ctx.fillStyle = "#bbb";
-  ctx.fill();
   // 座標軸を描く
   drawAxis(ctx);
 }
