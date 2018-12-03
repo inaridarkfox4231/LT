@@ -9,10 +9,13 @@
       .field { text-align: center; }
       canvas{ background-color: #eee; }
       .figs{ display: inline-block; margin: 5px; }
-      #matrix{ font-size: 30px; }
+      #arrow{ font-size: 30px; }
       .inputElem{ text-align: center; }
       .inputs{ display: inline-block; }
+      #Shiftbutton{ height: 50px; width: 70px; font-size: 20px; background-color: #99CCFF; border-radius: 5px; }
+      #Shiftbutton:hover{ background-color: #33CCFF; }
       .element{ height: 30px; width: 40px; font-size: 20px; }
+      #explain{ font-size: 20px; }
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
@@ -37,19 +40,20 @@
     <div class = "field">
       <!-- 400×400にした -->
       <canvas id = "before" class = "figs" width = "400" height = "400"></canvas>
-      <div id = "matrix" class = "figs">
+      <div id = "arrow" class = "figs">
           \begin{CD} @>>> \end{CD}
       </div>
       <canvas id = "after" class = "figs" width = "400" height = "400"></canvas>
     </div>
     <div class = "inputElem">
+      <button id = "Shiftbutton" class = "inputs">Shift</button>
       <div id = "inputArea" class = "inputs">
-        <input class = "element" id = "elem00" type = "text" maxlength = "3">
-        <input class = "element" id = "elem01" type = "text" maxlength = "3"><br>
-        <input class = "element" id = "elem10" type = "text" maxlength = "3">
-        <input class = "element" id = "elem11" type = "text" maxlength = "3">
+        <input class = "element" id = "elem00" type = "text" maxlength = "5">
+        <input class = "element" id = "elem01" type = "text" maxlength = "5"><br>
+        <input class = "element" id = "elem10" type = "text" maxlength = "5">
+        <input class = "element" id = "elem11" type = "text" maxlength = "5">
       </div>
-      <div class = "inputs">Enter：変換結果確認　Shift：表示方法変更</div>
+      <div id = "explain" class = "inputs">Enter：変換結果確認　Shift：表示方法変更</div>
     </div>
     <script src = "./src/script.js">
     </script>

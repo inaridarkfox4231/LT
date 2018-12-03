@@ -181,3 +181,9 @@ document.addEventListener("keydown", function(e){
     showResult(elem, 1);
   }
 })
+// シフトボタンの追加。
+document.getElementById("Shiftbutton").addEventListener("click", function(){
+  mode = (mode + 1) % 3;
+  showResult([1, 0, 0, 1], 0);
+  showResult(elem, 1);
+})
