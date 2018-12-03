@@ -80,14 +80,33 @@ function drawLattice(elem, pos){
   // 線を引く
   ctx.beginPath();
   ctx.strokeStyle = "#bbb";
-  for(i = 1; i < 40; i++){
-    ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
-    ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
-    ctx.stroke();
-    ctx.moveTo(a * i * 10 + 200 * (1 - a - b), -c * i * 10 + 200 * (1 + c + d));
-    ctx.lineTo(a * i * 10 + 200 * (1 - a + b), -c * i * 10 + 200 * (1 + c - d));
+  // ここをいじる
+  // 第1段階：座標軸の像としての直線を2本引く
+  var u = Math.max(Math.abs(a), Math.abs(c)), v = Math.max(Math.abs(b), Math.abs(d));
+  var t;
+  if(u > 0){
+    t = Math.ceil(200 / u);
+    ctx.moveTo(200 - a * t, 200 + c * t);
+    ctx.lineTo(200 + a * t, 200 - c * t);
     ctx.stroke();
   }
+  if(v > 0){
+    t = Math.ceil(200 / v);
+    ctx.moveTo(200 - b * t, 200 + d * t);
+    ctx.lineTo(200 + b * t, 200 - d * t);
+    ctx.stroke();
+  }
+
+  // 第2段階：座標軸に平行な直線群を順に引く（まずx軸、次いでy軸）
+
+  //for(i = 1; i < 40; i++){
+  //  ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
+  //  ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
+  //  ctx.stroke();
+  //  ctx.moveTo(a * i * 10 + 200 * (1 - a - b), -c * i * 10 + 200 * (1 + c + d));
+  //  ctx.lineTo(a * i * 10 + 200 * (1 - a + b), -c * i * 10 + 200 * (1 + c - d));
+  //  ctx.stroke();
+  //}
   // 座標軸を描く
   drawAxis(ctx);
   // 軸ベクトルの描画。二つの矢印（x方向の赤とy方向の青）を表示。
@@ -104,7 +123,7 @@ function init(){
 
 // modeが0, 1, 2のいずれかに応じて変換結果を表示する関数
 function showResult(elem, pos){
-  drawLattice([1, 0, 0, 1], 0)
+  drawLattice([1, 0, 0, 1], 0);
   drawLattice(elem, pos);
 }
 
