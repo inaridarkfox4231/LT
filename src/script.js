@@ -106,13 +106,38 @@ function drawLattice(elem, pos){
   // 線を引く
   ctx.beginPath();
   ctx.strokeStyle = "#bbb";
-  for(i = 1; i < 40; i++){
-    ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
-    ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
-    ctx.stroke();
-    ctx.moveTo(a * i * 10 + 200 * (1 - a - b), -c * i * 10 + 200 * (1 + c + d));
-    ctx.lineTo(a * i * 10 + 200 * (1 - a + b), -c * i * 10 + 200 * (1 + c - d));
-    ctx.stroke();
+  // ad-bcが0でないならすべての軸を移す、0なら座標軸の像だけでいい。
+  var n, m, t, s;
+  if(a * d - b * c != 0){
+    // この辺の計算はちゃんと意味があるけど割愛（アイデアとしては正方形を包む円で考える）
+    n = Math.ceil((30 * Math.sqrt(a * a + c * c)) / (Math.abs(a * d - b * c)));
+    m = Math.ceil((30 * Math.sqrt(b * b + d * d)) / (Math.abs(a * d - b * c)));
+    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (Math.abs(a * d - b * c)));
+    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (Math.abs(a * d - b * c)));
+    for(i = -n; i <= n; i++){
+      ctx.moveTo(200 + a * t + 10 * i * b, 200 - c * t - 10 * i * d);
+      ctx.lineTo(200 - a * t + 10 * i * b, 200 + c * t - 10 * i * d);
+      ctx.stroke();
+    }
+    for(i = -m; i <= m; i++){
+      ctx.moveTo(200 + b * t + 10 * i * a, 200 - d * t - 10 * i * c);
+      ctx.lineTo(200 - b * t + 10 * i * a, 200 + d * t - 10 * i * c);
+      ctx.stroke();
+    }
+  }else{
+    var u = Math.max(Math.abs(a), Math.abs(c)), v = Math.max(Math.abs(b), Math.abs(d));
+    if(u > 0){
+      t = Math.ceil(200 / u);
+      ctx.moveTo(200 - a * t, 200 + c * t);
+      ctx.lineTo(200 + a * t, 200 - c * t);
+      ctx.stroke();
+    }
+    if(v > 0){
+      t = Math.ceil(200 / v);
+      ctx.moveTo(200 - b * t, 200 + d * t);
+      ctx.lineTo(200 + b * t, 200 - d * t);
+      ctx.stroke();
+    }
   }
   // 座標軸を描く
   drawAxis(ctx);
