@@ -1,0 +1,58 @@
+<!-- canvasで線型変換の実験をしてみる -->
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>線型変換の実験</title>
+    <style>
+      .heading{ text-align: center; font-size: 20px; margin: 0; }
+      .field { text-align: center; }
+      canvas{ background-color: #eee; }
+      .figs{ display: inline-block; margin: 5px; }
+      #arrow{ font-size: 30px; }
+      .inputElem{ text-align: center; }
+      .inputs{ display: inline-block; }
+      .element{ height: 30px; width: 40px; font-size: 20px; }
+      #explain{ font-size: 20px; }
+    </style>
+    <!-- 矢印 -->
+    <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+  </head>
+  <!-- onloadでこうしないとdrawImageによる描画が出来ないんだよー -->
+  <body onload = "init()">
+    <!-- 2次正方行列を生成するマクロを記述 -->
+    \(
+      \newcommand{\fourmat}[4]{
+        \left( \begin{array}{cc}
+          {#1} & {#2} \\
+          {#3} & {#4}
+        \end{array} \right)
+      }
+    \)
+    <!-- 図式を使うための宣言（矢印借りるだけ） -->
+    \( \require{AMScd} \)
+    <div class = "heading">
+      <b>線型変換ビジュアライザー</b>
+    </div>
+    <div class = "field">
+      <!-- 400×400にした -->
+      <canvas id = "before" class = "figs" width = "400" height = "400"></canvas>
+      <div id = "arrow" class = "figs">
+          \begin{CD} @>>> \end{CD}
+      </div>
+      <canvas id = "after" class = "figs" width = "400" height = "400"></canvas>
+    </div>
+    <div class = "inputElem">
+      <div id = "inputArea" class = "inputs">
+        <input class = "element" id = "elem00" type = "text" maxlength = "5">
+        <input class = "element" id = "elem01" type = "text" maxlength = "5"><br>
+        <input class = "element" id = "elem10" type = "text" maxlength = "5">
+        <input class = "element" id = "elem11" type = "text" maxlength = "5">
+      </div>
+      <div id = "explain" class = "inputs">Enter：変換結果確認</div>
+    </div>
+    <script src = "./src/lattice_test.js">
+    </script>
+  </body>
+</html>
