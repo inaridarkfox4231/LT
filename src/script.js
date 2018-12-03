@@ -161,7 +161,7 @@ function showResult(elem, pos){
   // 1と2はそのうち用意する
 }
 
-// スペースとエンターを押したときの処理
+// シフトとエンターを押したときの処理
 document.addEventListener("keydown", function(e){
   // エンターキーを押したときに行われること：（行列と矢印の表示、）afterに結果の表示。
   if(e.keyCode == K_ENTER){
@@ -174,8 +174,9 @@ document.addEventListener("keydown", function(e){
      }
     showResult(elem, 1);
   }
-  // スペースキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
+  // シフトキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
   if(e.keyCode == K_SHIFT){
+    console.log("シフトキーが押されました");
     mode = (mode + 1) % 3;
     showResult([1, 0, 0, 1], 0);
     showResult(elem, 1);
@@ -183,7 +184,11 @@ document.addEventListener("keydown", function(e){
 })
 // シフトボタンの追加。
 document.getElementById("Shiftbutton").addEventListener("click", function(){
+  console.log("シフトボタンで操作しました");
   mode = (mode + 1) % 3;
   showResult([1, 0, 0, 1], 0);
   showResult(elem, 1);
+  // document.getElementById("elem00").focus(); // なんか、フォーカスがボタンに移っちゃうので、外す。
+  // じゃないとEnterキーで反応しちゃうんだって（てかよく気付いたなおい）
+  document.getElementById("Shiftbutton").blur(); // blurで外すという対策もある。勉強になるなー。
 })
