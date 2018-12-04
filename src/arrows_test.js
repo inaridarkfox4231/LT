@@ -12,10 +12,12 @@ for(i = 0; i < 5; i++){
 var dist = new Array();
 var dx = new Array();
 var dy = new Array();
+var ind = new Array();  // 0~100の長さの相対値（指標）（scaleだとなぜかエラー吐いたのでindにした）
 for(i = 0; i <= 20; i++){
   dist.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   dx.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   dy.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ind.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 }
 
 // キーコード
@@ -91,6 +93,7 @@ function drawDots(elem, pos){
 // dist, dx, dyを計算する
 function calc_dist(a, b, c, d){
   var x1, y1, x2, y2;
+  var max_of_dist = 0;
   for(i = 0; i <= 20; i++){
     for(j = 0; j <= 20; j++){
       x1 = 20 * i, y1 = 400 - 20 * j;
@@ -103,15 +106,33 @@ function calc_dist(a, b, c, d){
       }else{
         dx[i][j] = 0, dy[i][j] = 0;
       }
-      // console.log('%d %d %d %d %d', i, j, dist[i][j], dx[i][j], dy[i][j]);
+      if(max_of_dist < dist[i][j]){
+        console.log("更新されました");
+        max_of_dist = dist[i][j];
+      }
     }
   }
+  console.log("終了");
+  console.log(max_of_dist);
+  max_of_dist = Math.floor(max_of_dist); // 整数にしておく
+  // 無事MAXが出たので、これを使って指標を計算する
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      if(max_of_dist > 0){
+        ind[i][j] = Math.floor(Math.floor(dist[i][j]) * 100 / max_of_dist);
+      }else{
+        ind[i][j] = 0;
+      }
+    }
+  }
+  // 指標が計算できたので、太さをいじる。
 }
 
 // 各点における移動方向の矢印を求める（できれば長さを色で表したいけど）
 function drawSingleArrow(ctx, i, j){
   var x = 20 * i, y = 400 - 20 * j;
   ctx.beginPath();
+  // スケールに基づいて太さを調節する。
   ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 1, -3, 1, -6, 5]);
   ctx.fillStyle = "#000";
   ctx.fill();
