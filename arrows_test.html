@@ -17,21 +17,30 @@
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <!-- jQuery -->
+    <script type = "text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!-- MathJax関連の記述 -->
+    <script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script type="text/x-mathjax-config">
+      // この記述がないと「$ $」の記法が使えなくなる
+      MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$']] } });
+    </script>
   </head>
   <!-- onloadでこうしないとdrawImageによる描画が出来ないんだよー -->
   <body onload = "init()">
     <!-- 2次正方行列を生成するマクロを記述 -->
-    \(
+    $$
       \newcommand{\fourmat}[4]{
         \left( \begin{array}{cc}
           {#1} & {#2} \\
           {#3} & {#4}
         \end{array} \right)
       }
-    \)
+    $$
     <!-- 図式を使うための宣言（矢印借りるだけ） -->
-    \( \require{AMScd} \)
+    $$ \require{AMScd} $$
     <div class = "heading">
       <b>線型変換ビジュアライザー</b>
     </div>
@@ -52,7 +61,7 @@
       </div>
       <div id = "explain" class = "inputs">Enter：変換結果確認</div>
     </div>
-    <script src = "./src/arrows_test.js">
-    </script>
+    <script src = "./src/arrows_test.js"></script>
+    <script src = "./src/show_matrix.js"></script>
   </body>
 </html>

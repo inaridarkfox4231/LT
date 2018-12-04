@@ -200,6 +200,8 @@ document.addEventListener("keydown", function(e){
   // エンターキーを押したときに行われること：（行列と矢印の表示、）afterに結果の表示。
   if(e.keyCode == K_ENTER){
     var a = getValue(0, 0), b = getValue(0, 1), c = getValue(1, 0), d = getValue(1, 1);
+    // 空欄があったら反応しないようにしたい。
+    if(a == "" || b == "" || c == "" || d == ""){ return; }
     a = Number(a), b = Number(b), c = Number(c), d = Number(d);
     if(isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)){
        return;
