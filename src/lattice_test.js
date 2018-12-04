@@ -97,8 +97,8 @@ function drawLattice(elem, pos){
       ctx.stroke();
     }
     for(i = -m; i <= m; i++){
-      ctx.moveTo(200 + b * t + 10 * i * a, 200 - d * t - 10 * i * c);
-      ctx.lineTo(200 - b * t + 10 * i * a, 200 + d * t - 10 * i * c);
+      ctx.moveTo(200 + b * s + 10 * i * a, 200 - d * s - 10 * i * c);
+      ctx.lineTo(200 - b * s + 10 * i * a, 200 + d * s - 10 * i * c);
       ctx.stroke();
     }
   }else{
