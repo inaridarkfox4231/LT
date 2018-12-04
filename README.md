@@ -5,10 +5,12 @@
 Enterキーでその場合の線型変換の実行結果が右側の座標平面に表示される。  
 Shiftキーを押すと、モードチェンジが行われる。モードは３つ。  
 1. デフォルト（移動先の点が表示される）  
-![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/transform_1.PNG)
+![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/sample_0.PNG)
 2. 格子（表示が格子になる。変換後の格子と、あとベクトルの変化が表示される。(1, 0)と(0, 1)の移った先。）  
-![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/transform_2.PNG)
-3. 矢印（それぞれの点の移動の様子を矢印で表示する）  
-![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/transform_3.PNG)
+![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/sample_1.PNG)
+3. 矢印1（移動する方向を表示、長さを太さで表している）  
+![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/sample_2.PNG)
+4. 矢印2（移動する方向を表示、長さを色で表している（赤いほど長い））
+![sampleimage](https://github.com/inaridarkfox4231/LT/blob/gh-pages/images/sample_3.PNG)
 
 これらのモードがShiftキーを押すごとに順繰りに移り変わる。
