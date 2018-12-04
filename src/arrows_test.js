@@ -8,6 +8,16 @@ for(i = 0; i < 5; i++){
   colors.push(color);
 }
 
+// dist, dx, dyの配列（0で初期化する）
+var dist = new Array();
+var dx = new Array();
+var dy = new Array();
+for(i = 0; i <= 20; i++){
+  dist.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  dx.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  dy.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+}
+
 // キーコード
 const K_ENTER = 13;
 const K_SHIFT = 16;
@@ -78,12 +88,31 @@ function drawDots(elem, pos){
   drawAxis(ctx);
 }
 
+// dist, dx, dyを計算する
+function calc_dist(a, b, c, d){
+  var x1, y1, x2, y2;
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      x1 = 20 * i, y1 = 400 - 20 * j;
+      x2 = 200 * (1 - a - b) + 20 * (a * i + b * j);
+      y2 = 200 * (1 + c + d) - 20 * (c * i + d * j);
+      dist[i][j] = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+      if(dist[i][j] > 0){
+        dx[i][j] = (15 * (x2 - x1)) / dist[i][j];
+        dy[i][j] = (15 * (y2 - y1)) / dist[i][j];
+      }else{
+        dx[i][j] = 0, dy[i][j] = 0;
+      }
+      // console.log('%d %d %d %d %d', i, j, dist[i][j], dx[i][j], dy[i][j]);
+    }
+  }
+}
+
 // 各点における移動方向の矢印を求める（できれば長さを色で表したいけど）
-function drawSingleArrow(ctx, x1, y1, x2, y2){
-  var dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-  var dx = (15 * (x2 - x1)) / dist, dy = (15 * (y2 - y1)) / dist;
+function drawSingleArrow(ctx, i, j){
+  var x = 20 * i, y = 400 - 20 * j;
   ctx.beginPath();
-  ctx.arrow(x1, y1, x1 + dx, y1 + dy, [0, 1, -3, 1, -6, 5]);
+  ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 1, -3, 1, -6, 5]);
   ctx.fillStyle = "#000";
   ctx.fill();
   // グラデーションテストをエクセルでおこなったので使うかどうか決める（後で）
@@ -95,11 +124,15 @@ function drawArrows(elem, pos){
   ctx.drawImage(blank, 0, 0);
   var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
   // 変化の矢印を描く
-  var target = [0, 0];
+  // ここでa, b, c, dを元にしてdistの配列に数字を放り込む（dist[i][j]）
+  // dx, dyの配列も作ろうかな・・そうすればiとjを渡すだけで済むし。
+  // さらにdistのMAXを計算してこれとは別にスケール配列（scale[i][j]）に0~100を放り込む
+  // 以上の情報から太さを表現する。計算式は作ってある（0.01刻み）
+  calc_dist(a, b, c, d);
   ctx.beginPath();
-  for(i = -10; i <= 10; i++){
-    for(j = -10; j <= 10; j++){
-      drawSingleArrow(ctx, 200 + 20 * i, 200 - 20 * j, 200 + 20 * (a * i + b * j), 200 - 20 * (c * i + d * j));
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      drawSingleArrow(ctx, i, j);
     }
   }
   // 座標軸を描く

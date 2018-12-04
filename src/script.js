@@ -123,8 +123,8 @@ function drawLattice(elem, pos){
     // この辺の計算はちゃんと意味があるけど割愛（アイデアとしては正方形を包む円で考える）
     n = Math.ceil((30 * Math.sqrt(a * a + c * c)) / (Math.abs(a * d - b * c)));
     m = Math.ceil((30 * Math.sqrt(b * b + d * d)) / (Math.abs(a * d - b * c)));
-    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (Math.abs(a * d - b * c)));
-    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (Math.abs(a * d - b * c)));
+    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (a * a + c * c));
+    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (b * b + d * d));
     for(i = -n; i <= n; i++){
       ctx.moveTo(200 + a * t + 10 * i * b, 200 - c * t - 10 * i * d);
       ctx.lineTo(200 - a * t + 10 * i * b, 200 + c * t - 10 * i * d);
@@ -162,7 +162,6 @@ function drawArrows(elem, pos){
   ctx.drawImage(blank, 0, 0);
   var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
   // 変化の矢印を描く
-  var target = [0, 0];
   ctx.beginPath();
   for(i = -10; i <= 10; i++){
     for(j = -10; j <= 10; j++){

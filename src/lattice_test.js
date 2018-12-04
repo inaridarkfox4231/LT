@@ -88,8 +88,9 @@ function drawLattice(elem, pos){
   if(a * d - b * c != 0){
     n = Math.ceil((30 * Math.sqrt(a * a + c * c)) / (Math.abs(a * d - b * c)));
     m = Math.ceil((30 * Math.sqrt(b * b + d * d)) / (Math.abs(a * d - b * c)));
-    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (Math.abs(a * d - b * c)));
-    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (Math.abs(a * d - b * c)));
+    t = Math.ceil((300 * Math.sqrt(a * a + c * c) + 10 * Math.abs(a * b + c * d) * n) / (a * a + c * c));
+    s = Math.ceil((300 * Math.sqrt(b * b + d * d) + 10 * Math.abs(a * b + c * d) * m) / (b * b + d * d));
+    console.log('%d %d %d %d', n, m, t, s);
     for(i = -n; i <= n; i++){
       ctx.moveTo(200 + a * t + 10 * i * b, 200 - c * t - 10 * i * d);
       ctx.lineTo(200 - a * t + 10 * i * b, 200 + c * t - 10 * i * d);
@@ -115,14 +116,7 @@ function drawLattice(elem, pos){
       ctx.stroke();
     }
   }
-  //for(i = 1; i < 40; i++){
-  //  ctx.moveTo(b * i * 10 + 200 * (1 - a - b), -d * i * 10 + 200 * (1 + c + d));
-  //  ctx.lineTo(b * i * 10 + 200 * (1 + a - b), -d * i * 10 + 200 * (1 - c + d));
-  //  ctx.stroke();
-  //  ctx.moveTo(a * i * 10 + 200 * (1 - a - b), -c * i * 10 + 200 * (1 + c + d));
-  //  ctx.lineTo(a * i * 10 + 200 * (1 - a + b), -c * i * 10 + 200 * (1 + c - d));
-  //  ctx.stroke();
-  //}
+
   // 座標軸を描く
   drawAxis(ctx);
   // 軸ベクトルの描画。二つの矢印（x方向の赤とy方向の青）を表示。
