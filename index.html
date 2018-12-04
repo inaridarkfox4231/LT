@@ -19,30 +19,16 @@
     </style>
     <!-- 矢印 -->
     <script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
   </head>
   <!-- onloadでこうしないとdrawImageによる描画が出来ないんだよー -->
   <body onload = "init()">
-    <!-- 2次正方行列を生成するマクロを記述 -->
-    \(
-      \newcommand{\fourmat}[4]{
-        \left( \begin{array}{cc}
-          {#1} & {#2} \\
-          {#3} & {#4}
-        \end{array} \right)
-      }
-    \)
-    <!-- 図式を使うための宣言（矢印借りるだけ） -->
-    \( \require{AMScd} \)
     <div class = "heading">
       <b>線型変換ビジュアライザー(ver3.1)</b>
     </div>
     <div class = "field">
       <!-- 400×400にした -->
       <canvas id = "before" class = "figs" width = "400" height = "400"></canvas>
-      <div id = "arrow" class = "figs">
-          \begin{CD} @>>> \end{CD}
-      </div>
+      <div id = "arrow" class = "figs">→</div>
       <canvas id = "after" class = "figs" width = "400" height = "400"></canvas>
     </div>
     <div class = "inputElem">
@@ -55,7 +41,6 @@
       </div>
       <div id = "explain" class = "inputs">Enter：変換結果確認　Shift：表示方法変更</div>
     </div>
-    <script src = "./src/script.js">
-    </script>
+    <script src = "./src/script.js"></script>
   </body>
 </html>
