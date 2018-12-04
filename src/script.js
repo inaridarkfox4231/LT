@@ -8,6 +8,32 @@ for(i = 0; i < 5; i++){
   colors.push(color);
 }
 
+// dist, dx, dyの配列（0で初期化する）
+var dist = new Array();
+var dx = new Array();
+var dy = new Array();
+var ind = new Array();  // 0~100の長さの相対値（指標）（scaleだとなぜかエラー吐いたのでindにした）
+for(i = 0; i <= 20; i++){
+  dist.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  dx.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  dy.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ind.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+}
+
+// R,G,Bの配列（色で長さを表現するのに使う）（立方体の辺の上を移動する感じ）
+var col_R = new Array(), col_G = new Array(), col_B = new Array();
+for(i = 0; i <= 100; i++){
+  col_R.push(0), col_G.push(0), col_B.push(0);
+}
+col_R[0] = 215, col_G[0] = 15, col_B[0] = 205;
+for(i = 1; i <= 20; i++){
+  col_R[i] = 225 - 10 * i,    col_G[i] = 15,                col_B[i] = 215;
+  col_R[i + 20] = 15,         col_G[i + 20] = 5 + 10 * i,   col_B[i + 20] = 215;
+  col_R[i + 40] = 15,         col_G[i + 40] = 215,          col_B[i + 40] = 225 - 10 * i;
+  col_R[i + 60] = 5 + 10 * i, col_G[i + 60] = 215,          col_B[i + 60] = 15;
+  col_R[i + 80] = 215,        col_G[i + 80] = 225 - 10 * i, col_B[i + 80] = 15;
+}
+
 // キーコード
 const K_ENTER = 13;
 const K_SHIFT = 16;
@@ -96,15 +122,56 @@ function drawDots(elem, pos){
   }
 }
 
+// dist, dx, dyを計算する
+function calc_dist(a, b, c, d){
+  var x1, y1, x2, y2;
+  var max_of_dist = 0;
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      x1 = 20 * i, y1 = 400 - 20 * j;
+      x2 = 200 * (1 - a - b) + 20 * (a * i + b * j);
+      y2 = 200 * (1 + c + d) - 20 * (c * i + d * j);
+      dist[i][j] = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+      if(dist[i][j] > 0){
+        dx[i][j] = (15 * (x2 - x1)) / dist[i][j];
+        dy[i][j] = (15 * (y2 - y1)) / dist[i][j];
+      }else{
+        dx[i][j] = 0, dy[i][j] = 0;
+      }
+      if(max_of_dist < dist[i][j]){
+        max_of_dist = dist[i][j];
+      }
+    }
+  }
+  max_of_dist = Math.floor(max_of_dist); // 整数にしておく
+  // 無事MAXが出たので、これを使って指標を計算する
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      if(max_of_dist > 0){
+        ind[i][j] = Math.floor(Math.floor(dist[i][j]) * 100 / max_of_dist);
+      }else{
+        ind[i][j] = 0;
+      }
+    }
+  }
+  // 指標が計算できたので、太さをいじる。
+}
+
 // 各点における移動方向の矢印を求める（できれば長さを色で表したいけど）
-function drawSingleArrow(ctx, x1, y1, x2, y2){
-  var dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-  var dx = (15 * (x2 - x1)) / dist, dy = (15 * (y2 - y1)) / dist;
+// flag=0: 太さで表現、flag=1: 色で表現
+function drawSingleArrow(ctx, i, j, flag){
+  var x = 20 * i, y = 400 - 20 * j;
   ctx.beginPath();
-  ctx.arrow(x1, y1, x1 + dx, y1 + dy, [0, 1, -3, 1, -6, 5]);
-  ctx.fillStyle = "#000";
+  // スケールに基づいて太さ、もしくは色を調節する（flagで制御）
+  if(flag == 0){
+    var diff = (ind[i][j] * 5) / 100;
+    ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 0.5 + diff, -3 - diff, 0.5 + diff, -6 - diff, 7]);
+    ctx.fillStyle = "#000";
+  }else{
+    ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 2, -4.5, 2, -7.5, 7]);
+    ctx.fillStyle = "rgb(" + col_R[ind[i][j]] + ", " + col_G[ind[i][j]] + ", " + col_B[ind[i][j]] + ")";
+  }
   ctx.fill();
-  // グラデーションテストをエクセルでおこなったので使うかどうか決める（後で）
 }
 
 // 格子を表示する（格子線、ベクトルの両方）
@@ -157,19 +224,21 @@ function drawLattice(elem, pos){
 }
 
 // 線型変換による移動の様子を描画する
-function drawArrows(elem, pos){
+function drawArrows(elem, pos, flag){
   var ctx = getctx(pos);
   ctx.drawImage(blank, 0, 0);
   var a = elem[0], b = elem[1], c = elem[2], d = elem[3];
-  // 変化の矢印を描く
+  // dist, dx, dyを計算する
+  calc_dist(a, b, c, d);
   ctx.beginPath();
-  for(i = -10; i <= 10; i++){
-    for(j = -10; j <= 10; j++){
-      drawSingleArrow(ctx, 200 + 20 * i, 200 - 20 * j, 200 + 20 * (a * i + b * j), 200 - 20 * (c * i + d * j));
-    }
-  }
   // 座標軸を描く
   drawAxis(ctx);
+  // 変化の矢印を描く
+  for(i = 0; i <= 20; i++){
+    for(j = 0; j <= 20; j++){
+      drawSingleArrow(ctx, i, j, flag);
+    }
+  }
 }
 
 // 初期化ですべきこと：beforeにデフォルトのドットを表示する。afterにも、一応。
@@ -187,7 +256,9 @@ function showResult(elem, pos){
   }else if(mode == 1){
     drawLattice(elem, pos);
   }else if(mode == 2){
-    drawArrows(elem, pos);
+    drawArrows(elem, pos, 0);
+  }else if(mode == 3){
+    drawArrows(elem, pos, 1);
   }
   // 1と2はそのうち用意する
 }
@@ -208,7 +279,7 @@ document.addEventListener("keydown", function(e){
   // シフトキーを押したときの反応。modeが0, 1, 2で回る、2つの画像も再描画。
   if(e.keyCode == K_SHIFT){
     console.log("シフトキーが押されました");
-    mode = (mode + 1) % 3;
+    mode = (mode + 1) % 4;
     showResult([1, 0, 0, 1], 0);
     showResult(elem, 1);
   }
@@ -216,7 +287,7 @@ document.addEventListener("keydown", function(e){
 // シフトボタンの追加。
 document.getElementById("Shiftbutton").addEventListener("click", function(){
   console.log("シフトボタンで操作しました");
-  mode = (mode + 1) % 3;
+  mode = (mode + 1) % 4;
   showResult([1, 0, 0, 1], 0);
   showResult(elem, 1);
   // document.getElementById("elem00").focus(); // なんか、フォーカスがボタンに移っちゃうので、外す。
