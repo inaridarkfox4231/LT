@@ -20,6 +20,20 @@ for(i = 0; i <= 20; i++){
   ind.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 }
 
+// R,G,Bの配列（色で長さを表現するのに使う）（立方体の辺の上を移動する感じ）
+var col_R = new Array(), col_G = new Array(), col_B = new Array();
+for(i = 0; i <= 100; i++){
+  col_R.push(0), col_G.push(0), col_B.push(0);
+}
+col_R[0] = 215, col_G[0] = 15, col_B[0] = 205;
+for(i = 1; i <= 20; i++){
+  col_R[i] = 225 - 10 * i,    col_G[i] = 15,                col_B[i] = 215;
+  col_R[i + 20] = 15,         col_G[i + 20] = 5 + 10 * i,   col_B[i + 20] = 215;
+  col_R[i + 40] = 15,         col_G[i + 40] = 215,          col_B[i + 40] = 225 - 10 * i;
+  col_R[i + 60] = 5 + 10 * i, col_G[i + 60] = 215,          col_B[i + 60] = 15;
+  col_R[i + 80] = 215,        col_G[i + 80] = 225 - 10 * i, col_B[i + 80] = 15;
+}
+
 // キーコード
 const K_ENTER = 13;
 const K_SHIFT = 16;
@@ -129,12 +143,19 @@ function calc_dist(a, b, c, d){
 }
 
 // 各点における移動方向の矢印を求める（できれば長さを色で表したいけど）
-function drawSingleArrow(ctx, i, j){
+// flag=0: 太さで表現、flag=1: 色で表現
+function drawSingleArrow(ctx, i, j, flag){
   var x = 20 * i, y = 400 - 20 * j;
   ctx.beginPath();
   // スケールに基づいて太さを調節する。
-  ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 1, -3, 1, -6, 5]);
-  ctx.fillStyle = "#000";
+  if(flag == 0){
+    var diff = (ind[i][j] * 5) / 100;
+    ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 0.5 + diff, -3 - diff, 0.5 + diff, -6 - diff, 7]);
+    ctx.fillStyle = "#000";
+  }else{
+    ctx.arrow(x, y, x + dx[i][j], y + dy[i][j], [0, 2, -4.5, 2, -7.5, 7]);
+    ctx.fillStyle = "rgb(" + col_R[ind[i][j]] + ", " + col_G[ind[i][j]] + ", " + col_B[ind[i][j]] + ")";
+  }
   ctx.fill();
   // グラデーションテストをエクセルでおこなったので使うかどうか決める（後で）
 }
@@ -153,7 +174,7 @@ function drawArrows(elem, pos){
   ctx.beginPath();
   for(i = 0; i <= 20; i++){
     for(j = 0; j <= 20; j++){
-      drawSingleArrow(ctx, i, j);
+      drawSingleArrow(ctx, i, j, 1);
     }
   }
   // 座標軸を描く
