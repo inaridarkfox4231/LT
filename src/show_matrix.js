@@ -1,3 +1,4 @@
+// お蔵入り（そのうち使うかも）
 $(function(){
   function showMatrix(a, b, c, d){
     $('#arrow').html("\\[ \\begin{CD} @> \\fourmat{" + a + "}{" + b + "}{" + c + "}{" + d + "} >> \\end{CD} \\]");

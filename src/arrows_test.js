@@ -195,6 +195,14 @@ function showResult(elem, pos){
   drawArrows(elem, pos);
 }
 
+// 行列表示用のコード生成関数
+function makeMatText(a, b, c, d){
+  var str = "";
+  str += "\\[ \\begin{CD} @> \\left( \\begin{array}{cc} {" + a + "} & {" + b + "} \\\\";
+  str += "{" + c + "} & {" + d + "} \\end{array} \\right) >> \\end{CD} \\]";
+  return str;
+}
+
 // シフトとエンターを押したときの処理
 document.addEventListener("keydown", function(e){
   // エンターキーを押したときに行われること：（行列と矢印の表示、）afterに結果の表示。
@@ -207,6 +215,9 @@ document.addEventListener("keydown", function(e){
        return;
      }else{
        elem[0] = a, elem[1] = b, elem[2] = c, elem[3] = d;
+       // TODO:ここにTeX形式で矢印と行列を生成する命令を書き込む
+       document.getElementById("arrow").innerHTML = makeMatText(a, b, c, d);
+       MathJax.Hub.Queue(["Typeset", MathJax.Hub, "arrow"]);
      }
     showResult(elem, 1);
   }
