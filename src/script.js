@@ -275,6 +275,7 @@ document.addEventListener("keydown", function(e){
        return;
      }else{
        elem[0] = a, elem[1] = b, elem[2] = c, elem[3] = d;
+       // 行列表示はそのうち何とかする
      }
     showResult(elem, 1);
   }
