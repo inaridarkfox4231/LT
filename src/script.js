@@ -297,3 +297,7 @@ document.getElementById("Shiftbutton").addEventListener("click", function(){
   // じゃないとEnterキーで反応しちゃうんだって（てかよく気付いたなおい）
   document.getElementById("Shiftbutton").blur(); // blurで外すという対策もある。勉強になるなー。
 })
+
+// TODO: モード状態を明示するように仕様変更
+// TODO: Enterボタンを追加する
+// TODO: 上下キーでフォーカス移動、出来たらいいなー
