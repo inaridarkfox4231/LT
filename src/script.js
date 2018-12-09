@@ -300,4 +300,6 @@ document.getElementById("Shiftbutton").addEventListener("click", function(){
 
 // TODO: モード状態を明示するように仕様変更
 // TODO: Enterボタンを追加する
-// TODO: 上下キーでフォーカス移動、出来たらいいなー
+// TODO: 上下キーでフォーカス移動、出来たらいいなー（キー操作ですべての処理を完結させたい）
+// （↑どこにフォーカスしてるかとか、枠の太さをcssでいじって分かりやすいようにするとか）
+// TODO: ビジュアライザーⅡへの相互リンクを張る
